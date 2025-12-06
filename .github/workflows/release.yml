@@ -67,11 +67,13 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: release-artifacts-${{ matrix.suffix }}
+        name: envfix-${{ matrix.goos }}-${{ matrix.goarch }}
         path: |
           envfix-${{ matrix.suffix }}
           envfix-${{ matrix.suffix }}.sha256
         retention-days: 1
+        if-no-files-found: error
+        overwrite: true
 
   create-release:
     name: Create Release
@@ -85,7 +87,8 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        path: artifacts
+        path: release-assets
+        pattern: envfix-*
 
     - name: Get version from tag
       id: get_version
@@ -105,13 +108,12 @@ jobs:
         echo "### Downloads" >> release_notes.txt
         echo "See assets below for pre-built binaries for all platforms." >> release_notes.txt
 
-    - name: Verify binaries exist
+    - name: Organize release assets
       run: |
-        echo "Built binaries:"
-        find artifacts -type f -name "envfix-*" ! -name "*.sha256" -exec ls -lh {} \;
-        echo ""
-        echo "Checksums:"
-        find artifacts -type f -name "*.sha256" -exec cat {} \;
+        mkdir -p assets
+        find release-assets -type f -name "envfix-*" -exec mv {} assets/ \;
+        echo "Release assets organized:"
+        ls -lh assets/
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -119,8 +121,7 @@ jobs:
         tag_name: ${{ steps.get_version.outputs.version }}
         name: Release ${{ steps.get_version.outputs.version }}
         body_path: release_notes.txt
-        files: |
-          artifacts/*/envfix-*
+        files: assets/*
         draft: false
         prerelease: false
       env:
