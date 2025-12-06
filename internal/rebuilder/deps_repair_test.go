@@ -22,9 +22,11 @@ func TestCheckDependencyLockfiles(t *testing.T) {
 	r := &Rebuilder{}
 	tempDir := t.TempDir()
 	originalDir, _ := os.Getwd()
-	defer os.Chdir(originalDir)
+	defer func() { _ = os.Chdir(originalDir) }()
 
-	_ = os.Chdir(tempDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
 
 	// Test 1: No files - should pass
 	err := r.CheckDependencyLockfiles()
@@ -61,9 +63,11 @@ func TestVerifyDependencies(t *testing.T) {
 	r := &Rebuilder{}
 	tempDir := t.TempDir()
 	originalDir, _ := os.Getwd()
-	defer os.Chdir(originalDir)
+	defer func() { _ = os.Chdir(originalDir) }()
 
-	_ = os.Chdir(tempDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
 
 	// Test 1: Empty directory - no dependencies to verify
 	err := r.VerifyDependencies()
@@ -82,9 +86,11 @@ func TestRegenerateLockfiles(t *testing.T) {
 	r := &Rebuilder{}
 	tempDir := t.TempDir()
 	originalDir, _ := os.Getwd()
-	defer os.Chdir(originalDir)
+	defer func() { _ = os.Chdir(originalDir) }()
 
-	_ = os.Chdir(tempDir)
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Failed to change directory: %v", err)
+	}
 
 	// Test 1: Empty directory
 	err := r.RegenerateLockfiles()

@@ -31,7 +31,7 @@ Node.js, Rust, Go, and system-level toolchains.`,
 		utils.CloseLogger()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		_ = cmd.Help()
 	},
 }
 
