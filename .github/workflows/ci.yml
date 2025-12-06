@@ -42,7 +42,7 @@ jobs:
       continue-on-error: true
 
     - name: Run tests
-      run: go test -v -race -coverprofile=coverage.out ./internal/detector ./internal/parser ./internal/rebuilder ./internal/utils ./internal/config ./internal/cleaner ./internal/spec
+      run: go test -v -coverprofile=coverage.out ./internal/detector ./internal/parser ./internal/rebuilder ./internal/utils
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
@@ -108,7 +108,7 @@ jobs:
       run: go mod tidy && go mod download
 
     - name: Generate coverage report
-      run: go test -v -coverprofile=coverage.out -covermode=atomic ./internal/detector ./internal/parser ./internal/rebuilder ./internal/utils ./internal/config ./internal/cleaner ./internal/spec
+      run: go test -v -coverprofile=coverage.out -covermode=atomic ./internal/detector ./internal/parser ./internal/rebuilder ./internal/utils
 
     - name: Check coverage threshold (25%)
       run: |

@@ -30,7 +30,13 @@ func FindExecutable(name string) (string, error) {
 
 // RunCommand executes a command and returns output
 func RunCommand(name string, args ...string) (string, error) {
-	cmd := exec.Command(name, args...)
+	// Try to find the executable in PATH first
+	exePath, err := exec.LookPath(name)
+	if err != nil {
+		// If not found in PATH, use the name as-is (could be absolute path)
+		exePath = name
+	}
+	cmd := exec.Command(exePath, args...)
 	output, err := cmd.CombinedOutput()
 	return string(output), err
 }
