@@ -404,5 +404,4 @@ MIT - See LICENSE file
 ## Support
 
 - Issue Tracker: GitHub Issues
-- Discussions: GitHub Discussions
-- Email: support@envfix.io (Pro users)
+
