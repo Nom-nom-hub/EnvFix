@@ -16,6 +16,10 @@ jobs:
             goos: linux
             goarch: amd64
             suffix: linux-amd64
+          - os: ubuntu-latest
+            goos: linux
+            goarch: arm64
+            suffix: linux-arm64
           - os: windows-latest
             goos: windows
             goarch: amd64
@@ -28,6 +32,10 @@ jobs:
             goos: darwin
             goarch: arm64
             suffix: darwin-arm64
+    
+    defaults:
+      run:
+        shell: bash
 
     steps:
     - name: Checkout repository
@@ -41,27 +49,29 @@ jobs:
     - name: Get version from tag
       id: get_version
       run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-      shell: bash
 
     - name: Build binary
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
-      run: |
-        go build -ldflags="-s -w -X main.Version=${{ steps.get_version.outputs.version }}" -o envfix-${{ matrix.suffix }} -v
+      run: go build -ldflags="-s -w -X main.Version=${{ steps.get_version.outputs.version }}" -o envfix-${{ matrix.suffix }} -v
 
     - name: Calculate checksums
       run: |
-        sha256sum envfix-${{ matrix.suffix }} > envfix-${{ matrix.suffix }}.sha256
-      shell: bash
+        if command -v sha256sum &> /dev/null; then
+          sha256sum envfix-${{ matrix.suffix }} > envfix-${{ matrix.suffix }}.sha256
+        else
+          shasum -a 256 envfix-${{ matrix.suffix }} > envfix-${{ matrix.suffix }}.sha256
+        fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: release-artifacts
+        name: release-artifacts-${{ matrix.suffix }}
         path: |
           envfix-${{ matrix.suffix }}
           envfix-${{ matrix.suffix }}.sha256
+        retention-days: 1
 
   create-release:
     name: Create Release
@@ -75,27 +85,49 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: release-artifacts
+        path: artifacts
 
     - name: Get version from tag
       id: get_version
       run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        echo "## Changes" > release_notes.txt
+        if [ -f CHANGELOG.md ]; then
+          sed -n "/^## $VERSION/,/^## /p" CHANGELOG.md | head -n -1 >> release_notes.txt || echo "Initial release" >> release_notes.txt
+        else
+          echo "Initial release" >> release_notes.txt
+        fi
+        echo "" >> release_notes.txt
+        echo "### Downloads" >> release_notes.txt
+        echo "See assets below for pre-built binaries for all platforms." >> release_notes.txt
+
+    - name: Verify binaries exist
+      run: |
+        echo "Built binaries:"
+        find artifacts -type f -name "envfix-*" ! -name "*.sha256" -exec ls -lh {} \;
+        echo ""
+        echo "Checksums:"
+        find artifacts -type f -name "*.sha256" -exec cat {} \;
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ steps.get_version.outputs.version }}
         name: Release ${{ steps.get_version.outputs.version }}
-        body_path: ./docs/RELEASE_NOTES.md
+        body_path: release_notes.txt
         files: |
-          envfix-*
+          artifacts/*/envfix-*
         draft: false
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  github-pages:
-    name: Deploy Documentation
+  post-release:
+    name: Post-Release Tasks
     runs-on: ubuntu-latest
     needs: create-release
     if: success()
@@ -104,21 +136,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v3
+    - name: Get version from tag
+      id: get_version
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-    - name: Build documentation
+    - name: Create release notification
       run: |
-        mkdir -p site
-        cp README.md site/index.md
-        cp -r docs/* site/ || true
-        cp CHANGELOG.md site/ || true
-
-    - name: Upload pages artifact
-      uses: actions/upload-pages-artifact@v2
-      with:
-        path: 'site'
-
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v2
+        VERSION=${{ steps.get_version.outputs.version }}
+        echo "🎉 Released $VERSION"
+        echo "GitHub Release: https://github.com/${{ github.repository }}/releases/tag/$VERSION"
