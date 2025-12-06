@@ -83,7 +83,7 @@ func findPythonExecutable() string {
 
 func getPythonPaths() []string {
 	home := utils.GetHomeDir()
-	paths := []string{}
+	var paths []string
 
 	if utils.IsWindows() {
 		paths = append(paths,

@@ -96,7 +96,7 @@ func findNodeExecutable() string {
 
 func getNodePaths() []string {
 	home := utils.GetHomeDir()
-	paths := []string{}
+	var paths []string
 
 	if utils.IsWindows() {
 		paths = append(paths,
