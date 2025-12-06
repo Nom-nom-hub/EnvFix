@@ -1,5 +1,11 @@
 # envfix
 
+[![CI](https://github.com/Nom-nom-hub/EnvFix/actions/workflows/ci.yml/badge.svg)](https://github.com/Nom-nom-hub/EnvFix/actions/workflows/ci.yml)
+[![Release](https://github.com/Nom-nom-hub/EnvFix/actions/workflows/release.yml/badge.svg)](https://github.com/Nom-nom-hub/EnvFix/releases)
+[![GitHub Release](https://img.shields.io/github/v/release/Nom-nom-hub/EnvFix?label=release)](https://github.com/Nom-nom-hub/EnvFix/releases)
+[![License](https://img.shields.io/github/license/Nom-nom-hub/EnvFix)](LICENSE)
+[![Go Version](https://img.shields.io/badge/go-1.21+-blue.svg)](https://golang.org/doc/devel/release)
+
 A cross-language environment and dependency doctor that diagnoses, repairs, standardizes, and cleans developer environments across Python, Node.js, Rust, Go, and system-level toolchains.
 
 ## Features
