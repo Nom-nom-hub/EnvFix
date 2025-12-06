@@ -94,9 +94,15 @@ func ParseVersion(versionStr string) (major, minor, patch int) {
 	matches := re.FindStringSubmatch(versionStr)
 
 	if len(matches) >= 4 {
-		major, _ = strconv.Atoi(matches[1])
-		minor, _ = strconv.Atoi(matches[2])
-		patch, _ = strconv.Atoi(matches[3])
+		if val, err := strconv.Atoi(matches[1]); err == nil {
+			major = val
+		}
+		if val, err := strconv.Atoi(matches[2]); err == nil {
+			minor = val
+		}
+		if val, err := strconv.Atoi(matches[3]); err == nil {
+			patch = val
+		}
 	}
 
 	return

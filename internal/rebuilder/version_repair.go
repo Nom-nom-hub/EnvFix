@@ -70,8 +70,8 @@ func (r *Rebuilder) RemoveOldInterpreterVersions() error {
 		// Unix: Check ~/.python-versions or similar
 		pythonVersionsDir := filepath.Join(home, ".python-versions")
 		if utils.PathExists(pythonVersionsDir) {
-			entries, _ := utils.ListDirectory(pythonVersionsDir)
-			if len(entries) > 2 {
+			entries, err := utils.ListDirectory(pythonVersionsDir)
+			if err == nil && len(entries) > 2 {
 				utils.Warning("Multiple Python versions detected: %d versions", len(entries))
 			}
 		}
@@ -80,8 +80,8 @@ func (r *Rebuilder) RemoveOldInterpreterVersions() error {
 	// Check for old Node versions
 	nodVersionsDir := filepath.Join(home, ".nvm", "versions", "node")
 	if utils.PathExists(nodVersionsDir) {
-		entries, _ := utils.ListDirectory(nodVersionsDir)
-		if len(entries) > 2 {
+		entries, err := utils.ListDirectory(nodVersionsDir)
+		if err == nil && len(entries) > 2 {
 			utils.Warning("Multiple Node.js versions detected: %d versions", len(entries))
 		}
 	}
@@ -93,8 +93,8 @@ func (r *Rebuilder) RemoveOldInterpreterVersions() error {
 	}
 	toolchainsDir := filepath.Join(rustupHome, "toolchains")
 	if utils.PathExists(toolchainsDir) {
-		entries, _ := utils.ListDirectory(toolchainsDir)
-		if len(entries) > 2 {
+		entries, err := utils.ListDirectory(toolchainsDir)
+		if err == nil && len(entries) > 2 {
 			utils.Warning("Multiple Rust toolchains detected: %d versions", len(entries))
 			utils.Info("Use 'rustup toolchain remove <name>' to remove old toolchains")
 		}
@@ -103,8 +103,8 @@ func (r *Rebuilder) RemoveOldInterpreterVersions() error {
 	// Check for old Go versions via gimme
 	goVersionsDir := filepath.Join(home, ".gimme", "versions", "go")
 	if utils.PathExists(goVersionsDir) {
-		entries, _ := utils.ListDirectory(goVersionsDir)
-		if len(entries) > 1 {
+		entries, err := utils.ListDirectory(goVersionsDir)
+		if err == nil && len(entries) > 1 {
 			utils.Warning("Multiple Go versions detected: %d versions", len(entries))
 		}
 	}

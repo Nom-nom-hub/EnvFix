@@ -47,10 +47,12 @@ func (d *Detector) DetectPython() types.PythonEnv {
 
 	// List installed packages (limited)
 	if utils.PathExists("requirements.txt") {
-		data, _ := os.ReadFile("requirements.txt")
-		packages := strings.Split(string(data), "\n")
-		if len(packages) > 0 {
-			env.Packages = packages[:min(len(packages), 10)]
+		data, err := os.ReadFile("requirements.txt")
+		if err == nil {
+			packages := strings.Split(string(data), "\n")
+			if len(packages) > 0 {
+				env.Packages = packages[:min(len(packages), 10)]
+			}
 		}
 	}
 
