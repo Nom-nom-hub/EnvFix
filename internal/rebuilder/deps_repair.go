@@ -270,7 +270,7 @@ func (r *Rebuilder) CleanDependencyCaches() error {
 	}
 	cargoCache := filepath.Join(cargoHome, "registry", "cache")
 	if utils.PathExists(cargoCache) {
-		utils.RemoveDirectory(cargoCache)
+		_ = utils.RemoveDirectory(cargoCache)
 		utils.Success("✓ Rust cargo cache cleared")
 	}
 

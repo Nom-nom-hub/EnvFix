@@ -106,15 +106,11 @@ func (d *Detector) CheckCorruptionIssues(result *types.ScanResult) {
 
 	// Check for global package pollution
 	pollutionIssues := d.CheckGlobalPackagePollution()
-	for _, issue := range pollutionIssues {
-		result.Warnings = append(result.Warnings, issue)
-	}
+	result.Warnings = append(result.Warnings, pollutionIssues...)
 
 	// Check cache corruption
 	cacheIssues := d.CheckCacheCorruption()
-	for _, issue := range cacheIssues {
-		result.Warnings = append(result.Warnings, issue)
-	}
+	result.Warnings = append(result.Warnings, cacheIssues...)
 }
 
 // CheckIssues analyzes detected environments for problems

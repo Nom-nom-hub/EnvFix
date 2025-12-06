@@ -106,12 +106,12 @@ func TestDependencyDetection(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	tmpfile.WriteString(content)
+	_, _ = tmpfile.WriteString(content)
 	tmpfile.Close()
 	defer os.Remove(tmpfile.Name())
 
 	// Rename to package.json
-	os.Rename(tmpfile.Name(), "package.json")
+	_ = os.Rename(tmpfile.Name(), "package.json")
 	defer os.Remove("package.json")
 
 	d := NewDetector()

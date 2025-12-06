@@ -14,7 +14,7 @@ func TestIsOrphanedVenv(t *testing.T) {
 	// Create a temporary directory for testing
 	tempDir := t.TempDir()
 	venvDir := filepath.Join(tempDir, "test_venv")
-	os.MkdirAll(venvDir, 0755)
+	_ = os.MkdirAll(venvDir, 0755)
 
 	// Create pyvenv.cfg to mark it as a venv
 	configFile := filepath.Join(venvDir, "pyvenv.cfg")
@@ -39,7 +39,7 @@ func TestIsOrphanedVenv(t *testing.T) {
 
 	// Test 3: Non-existent pyvenv.cfg
 	notVenvDir := filepath.Join(tempDir, "not_venv")
-	os.MkdirAll(notVenvDir, 0755)
+	_ = os.MkdirAll(notVenvDir, 0755)
 
 	if d.isOrphanedVenv(notVenvDir) {
 		t.Errorf("Expected non-venv directory to return false")
@@ -63,11 +63,11 @@ func TestGetDirectoryAge(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			testDir := filepath.Join(tempDir, tt.name)
-			os.MkdirAll(testDir, 0755)
+			_ = os.MkdirAll(testDir, 0755)
 
 			// Modify time
 			past := time.Now().Add(-tt.age)
-			os.Chtimes(testDir, past, past)
+			_ = os.Chtimes(testDir, past, past)
 
 			age := d.getDirectoryAge(testDir)
 			if age == "unknown" {
@@ -101,15 +101,15 @@ func TestIsOrphanedVenvWithPyproject(t *testing.T) {
 
 	tempDir := t.TempDir()
 	venvDir := filepath.Join(tempDir, "venv")
-	os.MkdirAll(venvDir, 0755)
+	_ = os.MkdirAll(venvDir, 0755)
 
 	// Create pyvenv.cfg
 	configFile := filepath.Join(venvDir, "pyvenv.cfg")
-	os.WriteFile(configFile, []byte("home = /usr/bin\n"), 0644)
+	_ = os.WriteFile(configFile, []byte("home = /usr/bin\n"), 0644)
 
 	// Test with pyproject.toml
 	pyprojectFile := filepath.Join(tempDir, "pyproject.toml")
-	os.WriteFile(pyprojectFile, []byte("[tool.poetry]\n"), 0644)
+	_ = os.WriteFile(pyprojectFile, []byte("[tool.poetry]\n"), 0644)
 
 	if d.isOrphanedVenv(venvDir) {
 		t.Errorf("Expected venv to NOT be orphaned when pyproject.toml exists")
@@ -121,15 +121,15 @@ func TestIsOrphanedVenvWithSetup(t *testing.T) {
 
 	tempDir := t.TempDir()
 	venvDir := filepath.Join(tempDir, "venv")
-	os.MkdirAll(venvDir, 0755)
+	_ = os.MkdirAll(venvDir, 0755)
 
 	// Create pyvenv.cfg
 	configFile := filepath.Join(venvDir, "pyvenv.cfg")
-	os.WriteFile(configFile, []byte("home = /usr/bin\n"), 0644)
+	_ = os.WriteFile(configFile, []byte("home = /usr/bin\n"), 0644)
 
 	// Test with setup.py
 	setupFile := filepath.Join(tempDir, "setup.py")
-	os.WriteFile(setupFile, []byte("from setuptools import setup\n"), 0644)
+	_ = os.WriteFile(setupFile, []byte("from setuptools import setup\n"), 0644)
 
 	if d.isOrphanedVenv(venvDir) {
 		t.Errorf("Expected venv to NOT be orphaned when setup.py exists")

@@ -36,7 +36,7 @@ var initCmd = &cobra.Command{
 			utils.Warning("Configuration file already exists at %s", configPath)
 			fmt.Print("Overwrite? (y/N): ")
 			var response string
-			fmt.Scanln(&response)
+			_, _ = fmt.Scanln(&response)
 			if response != "y" && response != "Y" {
 				fmt.Println("Aborted")
 				return nil

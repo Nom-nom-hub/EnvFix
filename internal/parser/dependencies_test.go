@@ -28,7 +28,7 @@ numpy==1.23.0
 	tmpfile.Close()
 
 	// Rename it to requirements.txt temporarily
-	os.Rename(tmpfile.Name(), "requirements.txt")
+	_ = os.Rename(tmpfile.Name(), "requirements.txt")
 	defer os.Remove("requirements.txt")
 
 	deps, err := ParseRequirementsTxt()
@@ -70,7 +70,7 @@ func TestParsePackageJSON(t *testing.T) {
 	}
 	tmpfile.Close()
 
-	os.Rename(tmpfile.Name(), "package.json")
+	_ = os.Rename(tmpfile.Name(), "package.json")
 	defer os.Remove("package.json")
 
 	deps, err := ParsePackageJSON()

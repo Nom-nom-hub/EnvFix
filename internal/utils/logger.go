@@ -15,10 +15,11 @@ const (
 	ErrorLevel
 )
 
-type Logger struct {
-	level LogLevel
-	file  *os.File
-}
+// Logger is unused and can be removed in future refactoring
+// type Logger struct {
+// 	level LogLevel
+// 	file  *os.File
+// }
 
 var logFile *os.File
 
@@ -44,7 +45,7 @@ func logMessage(level string, msg string, args ...interface{}) {
 
 	// Write to log file
 	if logFile != nil {
-		logFile.WriteString(output)
+		_, _ = logFile.WriteString(output)
 	}
 }
 
