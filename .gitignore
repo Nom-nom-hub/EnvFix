@@ -1,0 +1,83 @@
+# Development-Only Files (Not for GitHub)
+# These files are useful during development but should not be published
+
+## Development Documentation
+PHASE_3_SUMMARY.md
+PHASE_3_INDEX.md
+PHASE_4_SUMMARY.md
+PHASE_4_PROGRESS.md
+PHASE_5_SUMMARY.md
+SESSION_PROGRESS.md
+SESSION_SUMMARY.md
+SESSION_FINAL_SUMMARY.md
+FINAL_STATUS.md
+EXEC_SUMMARY.md
+IMPLEMENTATION_CHECKLIST.md
+MASTER_CHECKLIST.md
+PROJECT_SUMMARY.md
+HANDOFF.md
+00_START_HERE.md
+00_READ_ME_FIRST.md
+FILES_CREATED_MODIFIED.txt
+GITHUB_REPO_READY.md
+OPENSOURCE_PREP_COMPLETE.md
+V1_0_1_RELEASE_NOTES.md
+RELEASE_CHECKLIST.md
+DELIVERABLES.md
+SESSION_FINAL_SUMMARY.md
+INDEX.md
+
+## Environment Files
+env.yaml
+env.v2.yaml
+
+## Build Artifacts
+envfix.exe
+envfix
+*.o
+*.a
+*.so
+*.dylib
+
+## Go Specific
+dist/
+bin/
+
+## Test Coverage
+coverage.out
+*.cover
+*.coverprofile
+
+## IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+## OS-Specific
+.windows
+.mac
+.linux
+
+## Temporary Files
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+## Package Manager Caches
+go.sum.bak
+vendor/
+
+## Dependencies
+node_modules/
+.venv/
+venv/
+
+## Build Cache
+.cache/
+.build/

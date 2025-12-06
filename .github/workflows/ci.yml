@@ -1,0 +1,121 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        go-version: ['1.21', '1.25']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v4
+      with:
+        go-version: ${{ matrix.go-version }}
+
+    - name: Cache Go modules
+      uses: actions/cache@v3
+      with:
+        path: ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+
+    - name: Install dependencies
+      run: go mod tidy && go mod download
+
+    - name: Run linter (golangci-lint)
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: latest
+        args: --timeout=5m
+
+    - name: Run tests
+      run: go test -v -race -coverprofile=coverage.out ./...
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage.out
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Build binaries
+      run: |
+        go build -o envfix-${{ matrix.os }} -v
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: envfix-${{ matrix.os }}-go${{ matrix.go-version }}
+        path: envfix*
+        retention-days: 5
+
+  quality:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.25'
+
+    - name: Run go vet
+      run: go vet ./...
+
+    - name: Run go fmt check
+      run: |
+        if [ $(gofmt -l . | wc -l) -gt 0 ]; then
+          echo "Code formatting issues found. Run 'go fmt ./...'"
+          gofmt -l .
+          exit 1
+        fi
+
+    - name: Check for TODO/FIXME comments
+      run: |
+        grep -r "TODO\|FIXME" . --include="*.go" || true
+
+  test-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.25'
+
+    - name: Generate coverage report
+      run: go test -v -coverprofile=coverage.out -covermode=atomic ./...
+
+    - name: Check coverage threshold (85%)
+      run: |
+        COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+        echo "Coverage: $COVERAGE%"
+        if (( $(echo "$COVERAGE < 85" | bc -l) )); then
+          echo "Coverage below 85% threshold"
+          exit 1
+        fi
+
+    - name: Create coverage badge
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.out

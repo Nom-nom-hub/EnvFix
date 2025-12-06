@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    name: Build Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            suffix: linux-amd64
+          - os: windows-latest
+            goos: windows
+            goarch: amd64
+            suffix: windows-amd64.exe
+          - os: macos-latest
+            goos: darwin
+            goarch: amd64
+            suffix: darwin-amd64
+          - os: macos-latest
+            goos: darwin
+            goarch: arm64
+            suffix: darwin-arm64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.25'
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+      run: |
+        go build -ldflags="-s -w -X main.Version=${{ steps.get_version.outputs.version }}" -o envfix-${{ matrix.suffix }} -v
+
+    - name: Calculate checksums
+      run: |
+        sha256sum envfix-${{ matrix.suffix }} > envfix-${{ matrix.suffix }}.sha256
+      shell: bash
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-artifacts
+        path: |
+          envfix-${{ matrix.suffix }}
+          envfix-${{ matrix.suffix }}.sha256
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build-release
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: release-artifacts
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.version }}
+        name: Release ${{ steps.get_version.outputs.version }}
+        body_path: ./docs/RELEASE_NOTES.md
+        files: |
+          envfix-*
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  github-pages:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: create-release
+    if: success()
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+
+    - name: Build documentation
+      run: |
+        mkdir -p site
+        cp README.md site/index.md
+        cp -r docs/* site/ || true
+        cp CHANGELOG.md site/ || true
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: 'site'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
