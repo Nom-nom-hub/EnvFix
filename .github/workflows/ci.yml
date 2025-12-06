@@ -55,7 +55,7 @@ jobs:
       run: |
         go build -o envfix-${{ matrix.os }} -v
 
-    quality:
+  quality:
     runs-on: ubuntu-latest
     needs: build
 
