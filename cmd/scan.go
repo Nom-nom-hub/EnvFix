@@ -8,11 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	scanJSON bool
-	scanYAML bool
-)
-
 var scanCmd = &cobra.Command{
 	Use:   "scan",
 	Short: "Scan environment for issues",
@@ -99,6 +94,5 @@ var scanCmd = &cobra.Command{
 }
 
 func init() {
-	scanCmd.Flags().BoolVar(&scanJSON, "json", false, "Output as JSON")
-	scanCmd.Flags().BoolVar(&scanYAML, "yaml", false, "Output as YAML")
+	// TODO: Implement JSON and YAML output formats
 }

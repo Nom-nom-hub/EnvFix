@@ -10,13 +10,13 @@ import (
 
 // Config represents envfix configuration
 type Config struct {
-	Version         string         `yaml:"version"`
-	Excludes        []string       `yaml:"excludes"`
-	Include         IncludeConfig  `yaml:"include"`
-	Repair          RepairConfig   `yaml:"repair"`
-	Clean           CleanConfig    `yaml:"clean"`
-	Environment     EnvVars        `yaml:"environment"`
-	NotificationURL string         `yaml:"notification_url"`
+	Version         string        `yaml:"version"`
+	Excludes        []string      `yaml:"excludes"`
+	Include         IncludeConfig `yaml:"include"`
+	Repair          RepairConfig  `yaml:"repair"`
+	Clean           CleanConfig   `yaml:"clean"`
+	Environment     EnvVars       `yaml:"environment"`
+	NotificationURL string        `yaml:"notification_url"`
 }
 
 // IncludeConfig specifies what to include in scans
@@ -36,11 +36,11 @@ type RepairConfig struct {
 
 // CleanConfig specifies cleanup behavior
 type CleanConfig struct {
-	RemoveCaches      bool   `yaml:"remove_caches"`
-	RemoveBackups     bool   `yaml:"remove_backups"`
-	MaxCacheAgeDays   int    `yaml:"max_cache_age_days"`
-	DryRun            bool   `yaml:"dry_run"`
-	SkipConfirmation  bool   `yaml:"skip_confirmation"`
+	RemoveCaches     bool `yaml:"remove_caches"`
+	RemoveBackups    bool `yaml:"remove_backups"`
+	MaxCacheAgeDays  int  `yaml:"max_cache_age_days"`
+	DryRun           bool `yaml:"dry_run"`
+	SkipConfirmation bool `yaml:"skip_confirmation"`
 }
 
 // EnvVars defines environment variables

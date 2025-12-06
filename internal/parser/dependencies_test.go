@@ -88,7 +88,7 @@ func TestParsePackageJSON(t *testing.T) {
 
 func TestGetAllDependencies(t *testing.T) {
 	deps := GetAllDependencies()
-	
+
 	// Should return a slice (may be empty if no package files exist in test env)
 	// Just verify it's not nil (Go initializes empty slices)
 	if deps == nil {

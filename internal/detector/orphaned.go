@@ -105,7 +105,7 @@ func (d *Detector) walkForOrphanedModules(dir string, result *types.ScanResult) 
 		fullPath := filepath.Join(dir, entry.Name())
 
 		// Skip certain directories
-		if strings.HasPrefix(entry.Name(), ".") || 
+		if strings.HasPrefix(entry.Name(), ".") ||
 			entry.Name() == "node_modules" {
 			continue
 		}
@@ -196,7 +196,7 @@ func (d *Detector) isOrphanedVenv(venvPath string) bool {
 	// If venv is very new (less than 24 hours), consider it non-orphaned
 	// to avoid false positives for recently created venvs
 	age := d.getDirectoryAge(venvPath)
-	return !strings.Contains(age, "hours") || strings.Contains(age, "days")
+	return !strings.Contains(age, "hours") && !strings.Contains(age, "days")
 }
 
 // getDirectoryAge returns human-readable age of a directory

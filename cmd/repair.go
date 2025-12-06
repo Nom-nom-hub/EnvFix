@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	repairYes  bool
 	repairDry bool
 )
 
@@ -19,7 +18,7 @@ var repairCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		rb := rebuilder.NewRebuilder()
 		rb.SetDryRun(repairDry)
-		
+
 		err := rb.Repair()
 		if err != nil {
 			utils.Error("Repair failed: %v", err)
@@ -31,6 +30,6 @@ var repairCmd = &cobra.Command{
 }
 
 func init() {
-	repairCmd.Flags().BoolVar(&repairYes, "yes", false, "Skip confirmation prompts")
 	repairCmd.Flags().BoolVar(&repairDry, "dry-run", false, "Preview changes without applying them")
+	// TODO: Implement confirmation prompt functionality
 }

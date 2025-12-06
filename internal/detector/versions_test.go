@@ -7,8 +7,8 @@ import (
 
 func TestParseVersion(t *testing.T) {
 	tests := []struct {
-		name      string
-		versionStr string
+		name          string
+		versionStr    string
 		expectedMajor int
 		expectedMinor int
 		expectedPatch int

@@ -2,8 +2,8 @@ package parser
 
 import (
 	"bufio"
-	"envfix/internal/utils"
 	"encoding/json"
+	"envfix/internal/utils"
 	"os"
 	"strings"
 )

@@ -4,16 +4,16 @@ import "time"
 
 // ScanResult contains all detected issues in the environment
 type ScanResult struct {
-	Timestamp    time.Time     `yaml:"timestamp"`
-	Platform     PlatformInfo  `yaml:"platform"`
-	Python       PythonEnv     `yaml:"python"`
-	Node         NodeEnv       `yaml:"nodejs"`
-	Rust         RustEnv       `yaml:"rust"`
-	Go           GoEnv         `yaml:"go"`
-	Issues       []Issue       `yaml:"issues"`
-	Warnings     []string      `yaml:"warnings"`
-	IsHealthy    bool          `yaml:"is_healthy"`
-	ScanDuration float64       `yaml:"scan_duration_seconds"`
+	Timestamp    time.Time    `yaml:"timestamp"`
+	Platform     PlatformInfo `yaml:"platform"`
+	Python       PythonEnv    `yaml:"python"`
+	Node         NodeEnv      `yaml:"nodejs"`
+	Rust         RustEnv      `yaml:"rust"`
+	Go           GoEnv        `yaml:"go"`
+	Issues       []Issue      `yaml:"issues"`
+	Warnings     []string     `yaml:"warnings"`
+	IsHealthy    bool         `yaml:"is_healthy"`
+	ScanDuration float64      `yaml:"scan_duration_seconds"`
 }
 
 // PlatformInfo describes the system
@@ -75,27 +75,27 @@ type GoEnv struct {
 
 // Issue represents a detected problem
 type Issue struct {
-	ID       string   `yaml:"id"`
-	Title    string   `yaml:"title"`
-	Severity string   `yaml:"severity"` // critical, warning, info
-	Language string   `yaml:"language"`
-	Message  string   `yaml:"message"`
-	Path     string   `yaml:"path,omitempty"`
-	Fix      string   `yaml:"fix,omitempty"`
+	ID       string `yaml:"id"`
+	Title    string `yaml:"title"`
+	Severity string `yaml:"severity"` // critical, warning, info
+	Language string `yaml:"language"`
+	Message  string `yaml:"message"`
+	Path     string `yaml:"path,omitempty"`
+	Fix      string `yaml:"fix,omitempty"`
 }
 
 // EnvironmentManifest is the env.yaml structure
 type EnvironmentManifest struct {
-	Version      string                 `yaml:"version"`
-	Timestamp    time.Time              `yaml:"timestamp"`
-	Platform     PlatformInfo           `yaml:"platform"`
-	Python       PythonSpec             `yaml:"python,omitempty"`
-	Node         NodeSpec               `yaml:"nodejs,omitempty"`
-	Rust         RustSpec               `yaml:"rust,omitempty"`
-	Go           GoSpec                 `yaml:"go,omitempty"`
-	Dependencies map[string]string      `yaml:"dependencies,omitempty"`
-	Checksums    map[string]string      `yaml:"checksums,omitempty"`
-	Environment  map[string]string      `yaml:"environment,omitempty"`
+	Version      string            `yaml:"version"`
+	Timestamp    time.Time         `yaml:"timestamp"`
+	Platform     PlatformInfo      `yaml:"platform"`
+	Python       PythonSpec        `yaml:"python,omitempty"`
+	Node         NodeSpec          `yaml:"nodejs,omitempty"`
+	Rust         RustSpec          `yaml:"rust,omitempty"`
+	Go           GoSpec            `yaml:"go,omitempty"`
+	Dependencies map[string]string `yaml:"dependencies,omitempty"`
+	Checksums    map[string]string `yaml:"checksums,omitempty"`
+	Environment  map[string]string `yaml:"environment,omitempty"`
 }
 
 type PythonSpec struct {

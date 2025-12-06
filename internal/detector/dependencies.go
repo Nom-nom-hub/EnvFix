@@ -20,11 +20,6 @@ func (d *Detector) DetectDependencyIssues(result *types.ScanResult) {
 
 // CheckOutdatedLockfiles detects old or missing lockfiles
 func (d *Detector) CheckOutdatedLockfiles(result *types.ScanResult) {
-	// Python: Check for missing lockfile with requirements.txt
-	if utils.PathExists("requirements.txt") && !utils.PathExists("requirements.lock") {
-		// Not necessarily an issue, but good to track
-	}
-
 	// Node.js: Check for lock file inconsistency with package.json
 	if utils.PathExists("package.json") {
 		hasLock := utils.PathExists("package-lock.json") ||
@@ -39,11 +34,6 @@ func (d *Detector) CheckOutdatedLockfiles(result *types.ScanResult) {
 	// Go: Check for missing go.sum
 	if utils.PathExists("go.mod") && !utils.PathExists("go.sum") {
 		result.Warnings = append(result.Warnings, "go.mod found but go.sum is missing")
-	}
-
-	// Rust: Check for missing Cargo.lock
-	if utils.PathExists("Cargo.toml") && !utils.PathExists("Cargo.lock") {
-		// Only warning if it's a binary crate
 	}
 }
 

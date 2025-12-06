@@ -19,7 +19,7 @@ var lockCmd = &cobra.Command{
 	Long:  `Generates an environment manifest (env.yaml) capturing language versions, toolchain versions, dependencies, and more.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		utils.Info("Generating environment manifest...")
-		
+
 		gen := spec.NewGenerator()
 		yamlBytes, err := gen.GenerateYAML()
 		if err != nil {
@@ -34,7 +34,7 @@ var lockCmd = &cobra.Command{
 		}
 
 		utils.Success("✓ Manifest written to %s", lockOutput)
-		
+
 		// Also print to stdout
 		fmt.Println("\n" + string(yamlBytes))
 		return nil

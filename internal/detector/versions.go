@@ -170,13 +170,13 @@ func FindAlternativeInterpreterVersions(interpreter string) []string {
 	if interpreter == "python" {
 		// Check common Python locations
 		pythonPaths := map[string]bool{
-			"/usr/bin/python3.11":                           true,
-			"/usr/bin/python3.10":                           true,
-			"/usr/bin/python3.9":                            true,
-			"C:\\Python311\\python.exe":                     true,
-			"C:\\Python310\\python.exe":                     true,
-			"C:\\Python39\\python.exe":                      true,
-			filepath.Join(home, ".pyenv", "versions"):       true,
+			"/usr/bin/python3.11":                     true,
+			"/usr/bin/python3.10":                     true,
+			"/usr/bin/python3.9":                      true,
+			"C:\\Python311\\python.exe":               true,
+			"C:\\Python310\\python.exe":               true,
+			"C:\\Python39\\python.exe":                true,
+			filepath.Join(home, ".pyenv", "versions"): true,
 		}
 
 		for path := range pythonPaths {

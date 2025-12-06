@@ -14,7 +14,7 @@ var explainCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		issue := args[0]
 		explanation := getExplanation(issue)
-		
+
 		fmt.Printf("\nIssue: %s\n", issue)
 		fmt.Printf("Explanation:\n%s\n\n", explanation)
 		return nil

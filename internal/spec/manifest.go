@@ -92,6 +92,9 @@ func (g *Generator) GenerateString() (string, error) {
 		return "", err
 	}
 
-	data, _ := yaml.Marshal(manifest)
+	data, err := yaml.Marshal(manifest)
+	if err != nil {
+		return "", err
+	}
 	return string(data), nil
 }
