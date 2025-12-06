@@ -66,17 +66,16 @@ func TestVerifyDependencies(t *testing.T) {
 	_ = os.Chdir(tempDir)
 
 	// Test 1: Empty directory - no dependencies to verify
-	warnings, errs := r.VerifyDependencies()
-	if len(errs) > 0 {
-		t.Logf("Empty dir errors: %v", errs)
+	err := r.VerifyDependencies()
+	if err != nil {
+		t.Logf("Empty dir error (may be expected): %v", err)
 	}
 
 	// Test 2: Python project
 	_ = os.WriteFile("requirements.txt", []byte("requests==2.28.0\n"), 0644)
-	warnings, errs = r.VerifyDependencies()
-	_ = warnings
-	_ = errs
+	err = r.VerifyDependencies()
 	// Just verify it doesn't panic
+	_ = err
 }
 
 func TestRegenerateLockfiles(t *testing.T) {
@@ -104,10 +103,8 @@ func TestCleanDependencyCaches(t *testing.T) {
 	r := &Rebuilder{}
 
 	// Just verify the function runs without error
-	freed, err := r.CleanDependencyCaches()
+	err := r.CleanDependencyCaches()
 	if err != nil {
 		t.Logf("Clean caches error (may be expected): %v", err)
 	}
-
-	t.Logf("Freed %d bytes", freed)
 }
